@@ -17,7 +17,7 @@ It simulates a real-world ERP chatbot system where users interact with structure
 
 
 
-## 🧠 System Workflow
+## System Workflow
 
 User Query → LLM (Groq) → MongoDB Query → Execution → Response
 

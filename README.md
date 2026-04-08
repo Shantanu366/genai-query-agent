@@ -11,13 +11,13 @@ It simulates a real-world ERP chatbot system where users can query structured da
 ## System Workflow
 
 User Query
-⬇
+
 LLM (Groq) → MongoDB Query Generation
-⬇
+
 Query Execution (MongoDB)
-⬇
+
 Result Processing
-⬇
+
 API Response
 
 ---

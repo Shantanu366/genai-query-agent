@@ -2,69 +2,104 @@
 
 ## Overview
 
-This project is a GenAI-powered query agent that converts natural language queries into MongoDB queries, executes them, and returns user-friendly results.
+This project is a **GenAI-powered query agent** that converts natural language questions into MongoDB queries, executes them, and returns user-friendly responses.
 
-It simulates a real-world ERP chatbot system where users interact with structured databases using natural language.
+It simulates a real-world ERP chatbot system where users can query structured databases using natural language.
 
-
-
-## Tech Stack
-
-* Python
-* FastAPI
-* MongoDB
-* Groq (LLaMA 3 models)
-
-
+---
 
 ## System Workflow
 
-User Query → LLM (Groq) → MongoDB Query → Execution → Response
+User Query
+⬇
+LLM (Groq) → MongoDB Query Generation
+⬇
+Query Execution (MongoDB)
+⬇
+Result Processing
+⬇
+API Response
 
+---
 
+## Tech Stack
 
-##  Database Schema
+* **Backend:** Python, FastAPI
+* **Database:** MongoDB
+* **LLM:** Groq (LLaMA 3 models)
+* **Libraries:** pymongo, python-dotenv
+
+---
+
+## Database Schema
 
 Collections used:
 
-* students
-* teachers
-* attendance
-* assignments
-* submissions
-* exams
+* **students** → student details
+* **teachers** → teacher info + classes
+* **attendance** → daily attendance
+* **assignments** → assignment details
+* **submissions** → assignment submissions
+* **exams** → exam schedule
 
 ---
 
-##  LLM Used
+## LLM Integration (Groq)
 
-We use Groq (LLaMA 3 models) for:
+We use Groq for:
 
-* fast inference
-* structured JSON output
-* low latency
+* Fast inference
+* Low cost
+* Structured JSON output
 
----
+Model used:
 
-## Key Features
-
-* Natural language → MongoDB query conversion
-* Aggregation queries ($group, $lookup, $sort)
-* Multi-collection joins
-* Analytical queries (attendance %, ranking)
-* Override logic for accuracy (hybrid approach)
-* Error handling for invalid pipelines
+```
+llama-3.3-70b-versatile
+```
 
 ---
 
-## How to Run
+##  Key Features
 
-### 1. Clone repo
+###  Natural Language → MongoDB Query
+
+* Converts user queries into valid MongoDB queries dynamically
+
+###  Aggregation Queries
+
+* Supports `$group`, `$sort`, `$limit`, `$match`
+
+###  Multi-Collection Queries
+
+* Uses `$lookup` for joins
+
+###  Analytical Queries
+
+* Attendance percentage calculation
+* Ranking (Top students)
+
+### Hybrid Architecture
+
+* LLM + Rule-based overrides
+* Ensures accuracy for complex queries
+
+### Error Handling
+
+* Handles invalid JSON / pipelines gracefully
+
+---
+
+##  How to Run
+
+### 1. Clone repository
 
 ```bash
-git clone <>
+git clone https://github.com/Shantanu366/genai-query-agent.git
 cd genai-query-agent
 ```
+
+---
 
 ### 2. Install dependencies
 
@@ -72,19 +107,25 @@ cd genai-query-agent
 pip install -r requirements.txt
 ```
 
-### 3. Add environment variable
+---
 
-Create `.env` file:
+### 3. Setup environment variables
+
+Create a `.env` file:
 
 ```
 GROQ_API_KEY=your_api_key_here
 ```
+
+---
 
 ### 4. Start MongoDB
 
 ```bash
 mongod --dbpath ~/mongodb-data
 ```
+
+---
 
 ### 5. Insert sample data
 
@@ -93,17 +134,21 @@ mongosh
 use school
 ```
 
-(Add provided dummy data)
+(Add dummy data provided in project)
 
-### 6. Run server
+---
+
+### 6. Run FastAPI server
 
 ```bash
 uvicorn app:app --reload
 ```
 
+---
+
 ### 7. Test API
 
-Open:
+Open in browser:
 
 ```
 http://127.0.0.1:8000/query?query=Show all students in class 6
@@ -111,58 +156,78 @@ http://127.0.0.1:8000/query?query=Show all students in class 6
 
 ---
 
-## 🧪 Example Queries
+##  Supported Queries
 
-### Basic
+###  Level 1 – Basic
 
-* List all students in class 6
-* Show all teachers
-
-### Filtering
-
-* Students absent yesterday
-* Assignments due this week
-
-### Aggregation
-
-* Count absent students today
-* Assignments per class
-
-### Multi-Collection
-
-* Students who have not submitted assignment
-* Teachers and their classes
-
-### Analytical
-
-* Top 5 students by attendance percentage
+* List students in a class
+* Show attendance of a student
+* List teachers
+* Assignments created today
 
 ---
 
-## 📊 Example Output
+###  Level 2 – Filtering
+
+* Students absent yesterday
+* Assignments due this week
+* Section-wise filtering
+* Exams this month
+
+---
+
+###  Level 3 – Aggregation
+
+* Count absent students
+* Assignments per class
+* Class with highest absentees
+
+---
+
+###  Level 4 – Multi-Collection
+
+* Students who have not submitted assignments
+* Teachers and their classes
+* Attendance percentage per student
+
+---
+
+###  Level 5 – Analytical
+
+* Top 5 students with highest attendance
+
+---
+
+## Example Query & Output
+
+### Query:
+
+```
+Show students who were absent today
+```
+
+### Output:
 
 ```json
 {
-  "user_query": "Count absent students today",
   "result": [
-    {
-      "count": 2
-    }
+    { "name": "Bob" },
+    { "name": "Charlie" }
   ]
 }
 ```
 
 ---
 
-## ⚠️ Challenges & Solutions
+## Challenges & Solutions
 
-### 1. Invalid LLM Output
+### 1. Invalid LLM JSON Output
 
-* Solved using JSON extraction + validation
+* Solved using JSON extraction and validation
 
-### 2. Aggregation Errors
+### 2. Incorrect Aggregation Pipelines
 
-* Fixed using override logic
+* Fixed using rule-based overrides
 
 ### 3. Multi-Collection Joins
 
@@ -170,17 +235,21 @@ http://127.0.0.1:8000/query?query=Show all students in class 6
 
 ---
 
-## ⭐ Improvements (Optional)
+## Improvements (Optional)
 
-* Add frontend (Streamlit / React)
-* Add authentication
+* Add UI (Streamlit / React)
+* Add authentication & security layer
 * Improve prompt engineering
 * Add caching for performance
 
 ---
 
-## ✅ Conclusion
+## Conclusion
 
-This system demonstrates how LLMs can be integrated with databases to build intelligent query systems for real-world applications.
+This project demonstrates how LLMs can be integrated with databases to build intelligent, production-ready query systems.
 
 ---
+
+## Author
+
+Shantanu Rao

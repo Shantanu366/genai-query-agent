@@ -1,4 +1,3 @@
-# app.py
 
 import json
 from fastapi import FastAPI

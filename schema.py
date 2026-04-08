@@ -1,5 +1,3 @@
-# schema.py
-
 students = {
     "_id": "ObjectId",
     "name": "string",
